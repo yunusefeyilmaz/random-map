@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Random-Map
+    </title>
+  </head>
+  <body>
+    <div style="display: flex;">
+      <canvas id="bg" style="width: 75%;"></canvas>
+      <div style="width: 25%;">
+        <input id="start1" type="range" min="-100" max="100" value="-11" step="0.1" onchange="updateRangeValue('start1')" />
+        <span id="start1Value"></span>
+        <br>
+        Slope:
+        <input id="stop1" type="range" min="-100" max="100" value="0" step="0.1" onchange="updateRangeValue('stop1')" />
+        <span id="stop1Value"></span>
+        <br>
+        Height from the ground:
+        <input id="start2" type="range" min="-100" max="100" value="0" step="1" onchange="updateRangeValue('start2')" />
+        <span id="start2Value"></span>
+        <br>
+        Mountain Height:
+        <input id="stop2" type="range" min="-100" max="100" value="6" step="0.1" onchange="updateRangeValue('stop2')" />
+        <span id="stop2Value"></span>
+        <br>
+        Softness:
+        <input id="soft" type="range" min="-200" max="200" value="70" step="0.1" onchange="updateRangeValue('soft')" />
+        <span id="softValue"></span>
+        <br>
+        Noise Scale:
+        <input id="noiseScale" type="range" min="-200" max="200" value="10" step="0.1" onchange="updateRangeValue('noiseScale')" />
+        <span id="noiseScaleValue"></span></div>
+    </div>
+    
+    <script>
+      updateRangeValue('start1');
+      updateRangeValue('start2');
+      updateRangeValue('stop1');
+      updateRangeValue('stop2');
+      updateRangeValue('soft');
+      updateRangeValue('noiseScale');
+      function updateRangeValue(inputId) {
+        const input = document.getElementById(inputId);
+        const valueElement = document.getElementById(inputId + 'Value');
+        valueElement.textContent = input.value;
+      }
+    </script>
+    <br>
+    <script type="module" src="/main.js"></script>
+    <canvas id="myChart"></canvas> 
+  </body>
+</html>
