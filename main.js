@@ -59,26 +59,9 @@ function controlValues() {
   soft = document.getElementById("soft").value;
   noiseScale = document.getElementById("noiseScale").value;
 }
+import {createWater} from './WaterTerrain.js';
+scene.add(createWater(widthMap,heightMap));
 
-function map(value, start1, stop1, start2, stop2) {
-  return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
-}
-
-function createWater() {
-  const waterGeometry = new THREE.PlaneGeometry(widthMap, heightMap, 1, 1);
-  const waterMaterial = new THREE.MeshStandardMaterial({
-    color: 0x0000ff,
-    wireframe: false,
-    side: THREE.DoubleSide,
-  });
-
-  const water = new THREE.Mesh(waterGeometry, waterMaterial);
-  water.rotation.x = -Math.PI / 2; // Rotate for a flat terrain
-  water.position.y = -55; // Adjust height
-
-  scene.add(water);
-}
-createWater();
 function createTerrain() {
   if (terrainMesh) {
     scene.remove(terrainMesh);
@@ -86,8 +69,8 @@ function createTerrain() {
   const terrainGeometry = new THREE.PlaneGeometry(
     widthMap,
     heightMap,
-    30,
-    30
+    start1,
+    stop1
   );
   const terrainMaterial = new THREE.MeshStandardMaterial({
     vertexColors: true, 
@@ -109,12 +92,14 @@ function createTerrain() {
     const x = terrainGeometry.attributes.position.array[i];
     const y = terrainGeometry.attributes.position.array[i + 1];
     let noise = 0;
-    noise = simplexNoise.noise(x / soft, y / soft) * noiseScale; // Daha yüksek gürültü özellikleri\
-    const mapped = map(noise, start1,stop1,start2, stop2); // Yükseklik haritasına yeniden eşleme
+    // Calculate the noise value
+    noise = simplexNoise.noise(x / soft, y / soft) * noiseScale;
 
-    terrainGeometry.attributes.position.array[i + 2] = mapped;
-    mappedValues.push(mapped);
+
+    terrainGeometry.attributes.position.array[i + 2] = noise;
+    mappedValues.push(noise);
     // Calculate the color based on the height
+
     const color = Math.max(3, 2-noise); // Lower noise -> lighter color (scale 0-1)
     colors[i] = color; // Set red component
     colors[i + 1] = color; // Set green component
