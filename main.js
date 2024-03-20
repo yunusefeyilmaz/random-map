@@ -1,12 +1,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import Chart from "chart.js/auto";
 import { SimplexNoise } from "three/examples/jsm/math/SimplexNoise.js";
 
 // Setup
 const widthMap = 100;
 const heightMap = 100;
-let mappedValues = [];
 let terrainMesh;
 let start1;
 let stop1;
@@ -48,9 +46,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const spaceTexture = new THREE.TextureLoader().load("space.jpg");
 scene.background = spaceTexture;
 
-// Terrain
-// Import SimplexNoise from Three.js
-
+// Control Values
 function controlValues() {
   start1 = document.getElementById("start1").value;
   stop1 = document.getElementById("stop1").value;
@@ -66,14 +62,18 @@ function controlValues() {
 import { createWater } from "./WaterTerrain.js";
 let mesh;
 function water(){ 
+  // Remove the previous mesh
   if(mesh){
     scene.remove(mesh);
   }
+  // Create the water mesh
   const wmesh=createWater(widthMap, heightMap,waterHeight);
   scene.add(wmesh);
   mesh=wmesh;
 };
+// Create the water
 water(mesh);
+// Refresh the water
 const waterRefresh = 100;
 setInterval(water, waterRefresh);
 
@@ -84,12 +84,14 @@ function createTerrain() {
   if (terrainMesh) {
     scene.remove(terrainMesh);
   }
+  // Create the terrain
   const terrainGeometry = new THREE.PlaneGeometry(
     widthMap,
     heightMap,
     start1,
     stop1
   );
+  // Create the terrain material
   const terrainMaterial = new THREE.MeshStandardMaterial({
     vertexColors: true,
     color: 0x554124,
@@ -98,20 +100,20 @@ function createTerrain() {
     transparent: true,
     opacity: 1,
   });
-
+  // Create the colors array
   const colors = new Uint8Array(
     terrainGeometry.attributes.position.array.length * 3
   );
-
+  // Loop through the terrain and set the height
   for (
     let i = 0;
     i < terrainGeometry.attributes.position.array.length;
     i += 3
   ) {
-
+    // Get the x and y position
     const x = terrainGeometry.attributes.position.array[i];
     const y = terrainGeometry.attributes.position.array[i + 1];
-
+    // Map the x and y position to a value between 0 and 1
     const nx = x/widthMap - 0.5; 
     const ny = y/heightMap - 0.5;
     let noise = 0;
@@ -123,7 +125,7 @@ function createTerrain() {
       0.25 * Noise.noise(4 * nx, 4 * ny);
     const e2 = e / (1 + 0.5 + 0.25);
     noise = Math.pow(e2, soft);
-
+  
     if (!isNaN(noise)) {
       terrainGeometry.attributes.position.array[i + 2] = noise * noiseScale;
     }
@@ -135,16 +137,18 @@ function createTerrain() {
     colors[i + 2] = biomeColor & 255;
     terrainGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
   }
+  // Calculate the normals
   terrainGeometry.computeVertexNormals();
-
+  // Create the terrain mesh
   const terrain = new THREE.Mesh(terrainGeometry, terrainMaterial);
   terrain.rotation.x = -Math.PI / 2; // Rotate for a flat terrain
   terrain.position.y = -50; // Adjust height
-
+  // Add the terrain to the scene
   scene.add(terrain);
   terrainMesh = terrain;
 }
 
+// Biome Colors
 const WATER = 0x0000ff;
 const BEACH = 0xffff00;
 const FOREST = 0x228b22;
@@ -162,51 +166,24 @@ function biome(e) {
   else return SNOW;
 }
 
-// Terrain ekleyin
+// Create the terrain
 createTerrain();
-// Terrain'i belirli aralıklarla yeniden oluşturun (2 saniyede bir)
+// Refresh the terrain
 const terrainRefreshInterval = 200;
 setInterval(createTerrain, terrainRefreshInterval);
-//createCharts();
+
+
 // Scroll Animation
-
-function createCharts() {
-  let chart = new Chart(document.getElementById("myChart"), {
-    type: "line",
-    data: {
-      labels: Array.from({ length: mappedValues.length }, (_, i) => i + 1),
-      datasets: [
-        {
-          label: "Mapped Values",
-          data: mappedValues,
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-}
-
 function moveCamera() {
   const t = document.body.getBoundingClientRect().top;
   camera.position.z = t * -0.2;
   camera.position.x = t * -0.0022;
   camera.rotation.y = t * -0.0022;
 }
-
 document.body.onscroll = moveCamera;
 moveCamera();
 
 // Animation Loop
-
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
