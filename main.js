@@ -2,8 +2,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Setups 
-const widthMap = 1000;
-const heightMap = 1000;
+const widthMap = 1000.0;
+const heightMap = 1000.0;
 let cameraX = -30;
 let cameraZ = 200;
 let cameraY = 300;

@@ -6,7 +6,7 @@ let rng = seedrandom(Math.random().toString()); // generate a random seed
 let Noise = new createNoise2D(rng); // create a new 2D noise function
 
 const scaledNoise = (nx, ny, scale) => {
-    return (Noise(nx * scale, ny * scale)+1)/2;
+    return Noise(nx * scale, ny * scale)/2 +0.5;
 }
 
 export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseScale,autoGenerate)=> {
@@ -44,8 +44,8 @@ export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseSc
     const x = terrainGeometry.attributes.position.array[i];
     const y = terrainGeometry.attributes.position.array[i + 1];
     // Map the x and y position to a value between 0 and 1
-    const nx = x/widthMap ; 
-    const ny = y/heightMap ;
+    const nx = x/widthMap -0.5; 
+    const ny = y/heightMap -0.5;
     // Calculate the noise value
     let e = scaledNoise(nx, ny, 1)+
     0.5 * scaledNoise(nx, ny, 2)+
