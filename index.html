@@ -3,54 +3,170 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Random-Map
-    </title>
+    <title>Random-Map</title>
+    <style>
+      .toggle-input {
+        display: none;
+      }
+
+      .toggle-label {
+        position: relative;
+        display: inline-block;
+        width: 38px;
+        height: 23px;
+      }
+
+      .toggle-button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 30px;
+      }
+
+      .toggle-button:before {
+        position: absolute;
+        content: "";
+        height: 15px;
+        width: 15px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      .toggle-input:checked + .toggle-label .toggle-button {
+        background-color: #2196f3;
+      }
+
+      .toggle-input:checked + .toggle-label .toggle-button:before {
+        transform: translateX(15px);
+      }
+      body {
+      font-family: Arial, sans-serif; /* Use a nice font */
+      color: #333; /* Dark grey color for the text */
+      font-size: 1.2em; /* Make the text a bit larger */
+      font-weight: bold; /* Make the text bold */
+    }
+
+    .container {
+      font-size: 1.2em; /* Make the text a bit larger */
+      font-weight: bold; /* Make the text bold */
+    }
+
+    /* Style the labels */
+    label {
+      display: block;
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+
+    /* Style the range inputs */
+    input[type="range"] {
+      width: 100%;
+    }
+    </style>
   </head>
   <body>
-    <div style="display: flex;">
-      <canvas id="bg" style="width: 75%;"></canvas>
-      <div style="width: 25%;">
-        Width Segment:
-        <input id="start1" type="range" min="0" max="1000" value="30" step="1" onchange="updateRangeValue('start1')" />
-        <span id="start1Value"></span>
-        <br>
-        Height Segment:
-        <input id="stop1" type="range" min="0" max="1000" value="30" step="10" onchange="updateRangeValue('stop1')" />
-        <span id="stop1Value"></span>
-        <br>
-        Water Height:
-        <input id="start2" type="range" min="-100" max="100" value="-49.5" step="0.1" onchange="updateRangeValue('start2')" />
-        <span id="start2Value"></span>
-        <br>
+    <div style="display: flex">
+      <canvas id="bg" style="width: 75%"></canvas>
+      <div style="width: 25%">
+        <div class="container">
+          Auto Generate:
+          <input type="checkbox" id="check" class="toggle-input" />
+          <label for="check" class="toggle-label">
+            <span class="toggle-button"></span>
+          </label>
+        </div>
+        <br />
+        Width Segment:(<span id="start1Value"></span>)
+        <input
+          id="start1"
+          type="range"
+          min="0"
+          max="1000"
+          value="126"
+          step="1"
+          onchange="updateRangeValue('start1')"
+        />
+        <br />
+        Height Segment:(<span id="stop1Value"></span>)
+        <input
+          id="stop1"
+          type="range"
+          min="0"
+          max="1000"
+          value="126"
+          step="1"
+          onchange="updateRangeValue('stop1')"
+        />
+        <br />
+        Water Height:(<span id="start2Value"></span>)
+        <input
+          id="start2"
+          type="range"
+          min="-100"
+          max="100"
+          value="-55.4"
+          step="0.1"
+          onchange="updateRangeValue('start2')"
+        />
         
-        <input id="stop2" type="range" min="-100" max="100" value="6" step="0.1" onchange="updateRangeValue('stop2')" />
-        <span id="stop2Value"></span>
-        <br>
-        Softness:
-        <input id="soft" type="range" min="0" max="10" value="4.00" step="0.01" onchange="updateRangeValue('soft')" />
-        <span id="softValue"></span>
-        <br>
-        Mountain Height:
-        <input id="noiseScale" type="range" min="-200" max="200" value="10" step="0.1" onchange="updateRangeValue('noiseScale')" />
-        <span id="noiseScaleValue"></span></div>
+        <br />
+        Snow Height:(<span id="stop2Value"></span>)
+        <input
+          id="stop2"
+          type="range"
+          min="-100"
+          max="100"
+          value="35"
+          step="0.1"
+          onchange="updateRangeValue('stop2')"
+        />
+        <br />
+        Softness:(<span id="softValue"></span>)
+        <input
+          id="soft"
+          type="range"
+          min="0"
+          max="100"
+          value="35"
+          step="0.01"
+          onchange="updateRangeValue('soft')"
+        />
+        <br />
+        Mountain Height:(<span id="noiseScaleValue"></span>)
+        <input
+          id="noiseScale"
+          type="range"
+          min="0"
+          max="200"
+          value="140"
+          step="0.1"
+          onchange="updateRangeValue('noiseScale')"
+        />
+      </div>
     </div>
-    
+
     <script>
-      updateRangeValue('start1');
-      updateRangeValue('start2');
-      updateRangeValue('stop1');
-      updateRangeValue('stop2');
-      updateRangeValue('soft');
-      updateRangeValue('noiseScale');
+      updateRangeValue("start1");
+      updateRangeValue("start2");
+      updateRangeValue("stop1");
+      updateRangeValue("stop2");
+      updateRangeValue("soft");
+      updateRangeValue("noiseScale");
       function updateRangeValue(inputId) {
         const input = document.getElementById(inputId);
-        const valueElement = document.getElementById(inputId + 'Value');
+        const valueElement = document.getElementById(inputId + "Value");
         valueElement.textContent = input.value;
       }
     </script>
-    <br>
+    <br />
     <script type="module" src="/main.js"></script>
-    <canvas id="myChart"></canvas> 
+    <canvas id="myChart"></canvas>
   </body>
 </html>
