@@ -9,9 +9,11 @@ const scaledNoise = (nx, ny, scale) => {
     return (Noise(nx * scale, ny * scale)+1)/2;
 }
 
-export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseScale)=> {
-  rng = seedrandom(Math.random().toString()); // generate a random seed
-  Noise = new createNoise2D(rng); 
+export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseScale,autoGenerate)=> {
+  if(autoGenerate){
+    rng = seedrandom(Math.random().toString()); // generate a random seed
+    Noise = new createNoise2D(rng); 
+  }
   // Create the terrain
   const terrainGeometry = new THREE.PlaneGeometry(
     widthMap,

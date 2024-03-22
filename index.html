@@ -77,43 +77,43 @@
       <div style="width: 25%">
         <div class="container">
           Auto Generate:
-          <input type="checkbox" id="check" class="toggle-input" />
-          <label for="check" class="toggle-label">
+          <input type="checkbox" id="autoGenerate" class="toggle-input" />
+          <label for="autoGenerate" class="toggle-label">
             <span class="toggle-button"></span>
           </label>
         </div>
         <br />
-        Width Segment:(<span id="start1Value"></span>)
+        Width Segment:(<span id="widthSegmentValue"></span>)
         <input
-          id="start1"
+          id="widthSegment"
           type="range"
           min="0"
           max="1000"
           value="126"
           step="1"
-          onchange="updateRangeValue('start1')"
+          onchange="updateRangeValue('widthSegment')"
         />
         <br />
-        Height Segment:(<span id="stop1Value"></span>)
+        Height Segment:(<span id="heightSegmentValue"></span>)
         <input
-          id="stop1"
+          id="heightSegment"
           type="range"
           min="0"
           max="1000"
           value="126"
           step="1"
-          onchange="updateRangeValue('stop1')"
+          onchange="updateRangeValue('heightSegment')"
         />
         <br />
-        Water Height:(<span id="start2Value"></span>)
+        Water Height:(<span id="waterHeightValue"></span>)
         <input
-          id="start2"
+          id="waterHeight"
           type="range"
           min="-100"
           max="100"
           value="-55.4"
           step="0.1"
-          onchange="updateRangeValue('start2')"
+          onchange="updateRangeValue('waterHeight')"
         />
         
         <br />
@@ -139,26 +139,26 @@
           onchange="updateRangeValue('soft')"
         />
         <br />
-        Mountain Height:(<span id="noiseScaleValue"></span>)
+        Mountain Height:(<span id="mountainHeightValue"></span>)
         <input
-          id="noiseScale"
+          id="mountainHeight"
           type="range"
           min="0"
           max="200"
           value="140"
           step="0.1"
-          onchange="updateRangeValue('noiseScale')"
+          onchange="updateRangeValue('mountainHeight')"
         />
       </div>
     </div>
 
     <script>
-      updateRangeValue("start1");
-      updateRangeValue("start2");
-      updateRangeValue("stop1");
+      updateRangeValue("widthSegment");
+      updateRangeValue("heightSegment");
+      updateRangeValue("waterHeight");
       updateRangeValue("stop2");
       updateRangeValue("soft");
-      updateRangeValue("noiseScale");
+      updateRangeValue("mountainHeight");
       function updateRangeValue(inputId) {
         const input = document.getElementById(inputId);
         const valueElement = document.getElementById(inputId + "Value");

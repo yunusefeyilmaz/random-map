@@ -7,12 +7,13 @@ const heightMap = 1000;
 let cameraX = -30;
 let cameraZ = 200;
 let cameraY = 300;
-let start1;
-let stop1;
+let widthSegment;
+let heightSegment;
 let waterHeight=-49.5;
 let stop2;
 let soft;
-let noiseScale;
+let mountainHeight;
+let autoGenerate;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -49,12 +50,13 @@ scene.background = spaceTexture;
 
 // Control Values
 function controlValues() {
-  start1 = document.getElementById("start1").value;
-  stop1 = document.getElementById("stop1").value;
-  waterHeight = document.getElementById("start2").value;
+  widthSegment = document.getElementById("widthSegment").value;
+  heightSegment = document.getElementById("heightSegment").value;
+  waterHeight = document.getElementById("waterHeight").value;
   stop2 = document.getElementById("stop2").value;
   soft = document.getElementById("soft").value;
-  noiseScale = document.getElementById("noiseScale").value;
+  mountainHeight = document.getElementById("mountainHeight").value;
+  autoGenerate = document.getElementById("autoGenerate").checked;
 }
 // Water Terrain
 import { createWater } from "./WaterTerrain.js";
@@ -84,7 +86,7 @@ function earth(){
     scene.remove(earthMesh);
   }
   // Create the earth mesh
-  const emesh=createTerrain(widthMap, heightMap, start1, stop1, soft, noiseScale);
+  const emesh=createTerrain(widthMap, heightMap, widthSegment, heightSegment, soft, mountainHeight,autoGenerate);
   scene.add(emesh);
   earthMesh=emesh;
 }
