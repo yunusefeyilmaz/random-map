@@ -1,9 +1,10 @@
+
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Setups 
-const widthMap = 1000.0;
-const heightMap = 1000.0;
+const widthMap = 1024.0;
+const heightMap = 1024.0;
 let cameraX = -30;
 let cameraZ = 200;
 let cameraY = 300;
@@ -17,10 +18,10 @@ let autoGenerate;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
-  90,
+  120,
   window.innerWidth / window.innerHeight,
-  0.1,
-  3000
+  0.4,
+  10000
 );
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector("#bg"),
@@ -32,13 +33,13 @@ renderer.setSize(
   (window.innerHeight * 80) / 100
 );
 camera.position.setY(cameraY);
-camera.position.setZ(cameraZ);
-camera.position.setX(cameraX);
+camera.position.setZ(-widthMap / 2);
+camera.position.setX(-heightMap / 2);
 renderer.render(scene, camera);
 
 // Lights
 const pointLight = new THREE.PointLight(0xffffff);
-pointLight.position.set(5, 5, 5);
+pointLight.position.set(10, 1000, 10);
 const ambientLight = new THREE.AmbientLight(0xffffff);
 scene.add(pointLight, ambientLight);
 
@@ -67,7 +68,7 @@ function water(){
     scene.remove(mesh);
   }
   // Create the water mesh
-  const wmesh=createWater(widthMap, heightMap,waterHeight);
+  const wmesh=createWater(widthMap, heightMap,waterHeight,camera);
   scene.add(wmesh);
   mesh=wmesh;
 };
@@ -86,14 +87,14 @@ function earth(){
     scene.remove(earthMesh);
   }
   // Create the earth mesh
-  const emesh=createTerrain(widthMap, heightMap, widthSegment, heightSegment, soft, mountainHeight,autoGenerate);
+  const emesh=createTerrain(widthMap, heightMap, widthSegment, heightSegment, soft, mountainHeight,autoGenerate,camera);
   scene.add(emesh);
   earthMesh=emesh;
 }
 // Create the earth
 earth(earthMesh);
 // Refresh the earth
-const earthRefresh =2000;
+const earthRefresh =100;
 setInterval(earth, earthRefresh);
 
 // Scroll Animation
@@ -105,6 +106,7 @@ function moveCamera() {
 }
 document.body.onscroll = moveCamera;
 moveCamera();
+
 
 // Animation Loop
 function animate() {

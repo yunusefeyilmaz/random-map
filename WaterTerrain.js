@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-export const createWater =(widthMap,heightMap,waterHeight)=>{
+export const createWater =(widthMap,heightMap,waterHeight,camera)=>{
     const waterGeometry = new THREE.PlaneGeometry(widthMap, heightMap, 1, 1);
     const waterMaterial = new THREE.MeshStandardMaterial({
       color: 0x0000ff,
@@ -11,6 +11,7 @@ export const createWater =(widthMap,heightMap,waterHeight)=>{
     const water = new THREE.Mesh(waterGeometry, waterMaterial);
     water.rotation.x = -Math.PI / 2; // Rotate for a flat terrain
     water.position.y = waterHeight; // Adjust height
-  
+    water.position.x = camera.position.x;
+    water.position.z = camera.position.z;
     return water;
 }
