@@ -9,7 +9,7 @@ const scaledNoise = (nx, ny, scale) => {
     return Noise(nx * scale, ny * scale)/4 +0.5;
 }
 
-export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseScale,autoGenerate,camera)=> {
+export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseScale,autoGenerate,camera,xDist,zDist)=> {
   if(autoGenerate){
     rng = seedrandom(Math.random().toString()); // generate a random seed
     Noise = new createNoise2D(rng); 
@@ -42,8 +42,8 @@ export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseSc
   ) {
     // Get the x and y position
     
-    const x = camera.position.x + terrainGeometry.attributes.position.array[i];
-    const y = camera.position.z - terrainGeometry.attributes.position.array[i + 1];
+    const x = camera.position.x+xDist + terrainGeometry.attributes.position.array[i];
+    const y = camera.position.z-zDist - terrainGeometry.attributes.position.array[i + 1];
     // Map the x and y position to a value between 0 and 1
     const nx = x/widthMap -0.5; 
     const ny = y/heightMap -0.5;
@@ -84,8 +84,8 @@ export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseSc
   terrain.rotation.x = -Math.PI / 2; // Rotate for a flat terrain
   terrain.position.y = -noiseScale/2+noiseScale/8; // Adjust height
   
-  terrain.position.x = camera.position.x;
-  terrain.position.z = camera.position.z;
+  terrain.position.x = camera.position.x + xDist;
+  terrain.position.z = camera.position.z - zDist;
   // Add the terrain to the scene
   return terrain;
 }

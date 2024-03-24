@@ -3,18 +3,13 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Setups 
-const widthMap = 1024.0;
-const heightMap = 1024.0;
-let cameraX = -30;
-let cameraZ = 200;
-let cameraY = 300;
-let widthSegment;
-let heightSegment;
-let waterHeight=-49.5;
-let stop2;
-let soft;
-let mountainHeight;
-let autoGenerate;
+let widthSegment, heightSegment, waterHeight, stop2, soft, mountainHeight, autoGenerate;
+const widthMap = 100.0;
+const heightMap = 100.0;
+let chunkSize = 3;
+let cameraY = 59.04;
+let cameraX = -74.23;
+let cameraZ = 72.13;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -33,9 +28,11 @@ renderer.setSize(
   (window.innerHeight * 80) / 100
 );
 camera.position.setY(cameraY);
-camera.position.setZ(-widthMap / 2);
-camera.position.setX(-heightMap / 2);
-renderer.render(scene, camera);
+camera.position.setZ(cameraZ);
+camera.position.setX(cameraX);
+camera.rotateX(-0.79);
+camera.rotateY(-0.60);
+camera.rotateZ(-0.52);
 
 // Lights
 const pointLight = new THREE.PointLight(0xffffff);
@@ -49,54 +46,43 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const spaceTexture = new THREE.TextureLoader().load("space.jpg");
 scene.background = spaceTexture;
 
-// Control Values
-function controlValues() {
-  widthSegment = document.getElementById("widthSegment").value;
-  heightSegment = document.getElementById("heightSegment").value;
-  waterHeight = document.getElementById("waterHeight").value;
-  stop2 = document.getElementById("stop2").value;
-  soft = document.getElementById("soft").value;
-  mountainHeight = document.getElementById("mountainHeight").value;
-  autoGenerate = document.getElementById("autoGenerate").checked;
-}
+
+
 // Water Terrain
 import { createWater } from "./WaterTerrain.js";
 let mesh;
-function water(){ 
+const water=()=>{ 
   // Remove the previous mesh
   if(mesh){
     scene.remove(mesh);
   }
+  const xDist = widthMap;
+  const zDist = heightMap;
   // Create the water mesh
-  const wmesh=createWater(widthMap, heightMap,waterHeight,camera);
+  const wmesh=createWater(widthMap*chunkSize, heightMap*chunkSize,waterHeight,camera,xDist,zDist);
   scene.add(wmesh);
   mesh=wmesh;
 };
-// Create the water
-water(mesh);
-// Refresh the water
-const waterRefresh = 100;
-setInterval(water, waterRefresh);
-
 // Earth Terrain
 import { createTerrain } from "./EarthTerrain.js";
-let earthMesh;
-function earth(){
+let earthMesh = [];
+const earth=()=> {
   // Remove the previous mesh
-  if(earthMesh){
-    scene.remove(earthMesh);
-  }
+  earthMesh.forEach((mesh) => scene.remove(mesh));
   // Create the earth mesh
-  const emesh=createTerrain(widthMap, heightMap, widthSegment, heightSegment, soft, mountainHeight,autoGenerate,camera);
-  scene.add(emesh);
-  earthMesh=emesh;
+  for (let i = 0; i < chunkSize * chunkSize; i++) {
+    const xDist = (i % chunkSize) * widthMap;
+    const zDist = Math.floor(i / chunkSize) * heightMap;
+    const emesh = createTerrain(widthMap, heightMap, widthSegment, heightSegment, soft, mountainHeight, autoGenerate, camera, xDist, zDist);
+    scene.add(emesh);
+    earthMesh.push(emesh);
+  }
 }
-// Create the earth
-earth(earthMesh);
-// Refresh the earth
-const earthRefresh =100;
-setInterval(earth, earthRefresh);
-
+const generate=()=>{
+  earth();
+  water();
+}
+generate();
 // Scroll Animation
 function moveCamera() {
   const t = document.body.getBoundingClientRect().top;
@@ -107,13 +93,49 @@ function moveCamera() {
 document.body.onscroll = moveCamera;
 moveCamera();
 
+function controlValues() {
+  widthSegment = document.getElementById("widthSegment").value;
+  heightSegment = document.getElementById("heightSegment").value;
+  waterHeight = document.getElementById("waterHeight").value;
+  stop2 = document.getElementById("stop2").value;
+  soft = document.getElementById("soft").value;
+  mountainHeight = document.getElementById("mountainHeight").value;
+  autoGenerate = document.getElementById("autoGenerate").checked;
+  generate();
+}
+// Call controlValues once to initialize the values
+controlValues();
+
+// Add event listeners to update the values when they change
+document.getElementById("widthSegment").addEventListener('change', controlValues);
+document.getElementById("heightSegment").addEventListener('change', controlValues);
+document.getElementById("waterHeight").addEventListener('change', controlValues);
+document.getElementById("stop2").addEventListener('change', controlValues);
+document.getElementById("soft").addEventListener('change', controlValues);
+document.getElementById("mountainHeight").addEventListener('change', controlValues);
+document.getElementById("autoGenerate").addEventListener('change', controlValues);
+
+addEventListener('mousemove', (event) => {
+  document.getElementById("cameraX").innerText
+  = "Camera X: "+camera.position.x;
+  document.getElementById("cameraY").innerText
+  = "Camera Y: "+camera.position.y;
+  document.getElementById("cameraZ").innerText
+  = "Camera Z: "+camera.position.z;
+  document.getElementById("cameraRotationX").innerText
+  = "Camera Rotation X: "+camera.rotation.x;
+  document.getElementById("cameraRotationY").innerText
+  = "Camera Rotation Y: "+camera.rotation.y;
+  document.getElementById("cameraRotationZ").innerText
+  = "Camera Rotation Z: "+camera.rotation.z;
+  generate();
+});
 
 // Animation Loop
-function animate() {
+function animate(timestamp) {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
-  controlValues();
 }
 
 animate();
