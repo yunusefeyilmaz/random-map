@@ -60,12 +60,12 @@ const water = () => {
   if (mesh) {
     scene.remove(mesh);
   }
-  const xDist = widthMap;
-  const zDist = heightMap;
+  const xDist = 0;
+  const zDist = 0;
   // Create the water mesh
   const wmesh = createWater(
-    widthMap * chunkSize,
-    heightMap * chunkSize,
+    widthMap * chunkSize*chunkSize/1.5,
+    heightMap * chunkSize*chunkSize/1.5,
     waterHeight,
     camera,
     xDist,
@@ -83,42 +83,48 @@ const earth = () => {
   // Remove the previous mesh
   earthMesh.forEach((mesh) => scene.remove(mesh));
   // Create the earth mesh
-    for (let i = 0; i < chunkSize * chunkSize; i++) {
-      const xDist = (i % chunkSize) * widthMap;
-      const zDist = Math.floor(i / chunkSize) * heightMap;
-      const emesh = createTerrain(
-        widthMap,
-        heightMap,
-        widthSegment,
-        heightSegment,
-        soft,
-        mountainHeight,
-        autoGenerate,
-        camera,
-        xDist,
-        zDist
-      );
-      scene.add(emesh);
-      earthMesh.push(emesh);
+  for (let k = -1; k <= 1; k += 2) {
+    for (let j = -1; j <= 1; j += 2) {
+      for (let i = 0; i < chunkSize * chunkSize; i++) {
+        let xDist = (i % chunkSize) * widthMap*k;
+        let zDist = Math.floor(i / chunkSize) * heightMap*j;
+        const emesh = createTerrain(
+          widthMap,
+          heightMap,
+          widthSegment,
+          heightSegment,
+          soft,
+          mountainHeight,
+          autoGenerate,
+          camera,
+          xDist,
+          zDist
+        );
+        scene.add(emesh);
+        earthMesh.push(emesh);
+      }
     }
-  
+  }
 };
 const generate = () => {
-  if(firstRender){
-  earth();
-  water();
-  firstRender = false;
-  }else if(camera.position.x-currentPos.x>=widthMap || camera.position.z-currentPos.z>=heightMap || camera.position.x-currentPos.x<=-widthMap || camera.position.z-currentPos.z<=-heightMap){
+  if (firstRender) {
+    earth();
+    water();
+    firstRender = false;
+  } else if (
+    camera.position.x - currentPos.x >= widthMap ||
+    camera.position.z - currentPos.z >= heightMap ||
+    camera.position.x - currentPos.x <= -widthMap ||
+    camera.position.z - currentPos.z <= -heightMap
+  ) {
     earth();
     water();
     currentPos.x = camera.position.x;
     currentPos.z = camera.position.z;
-  }else if(autoGenerate){
+  } else if (autoGenerate) {
     earth();
     water();
   }
-
-  
 };
 generate();
 // Scroll Animation
