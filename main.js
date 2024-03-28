@@ -9,8 +9,8 @@ let widthSegment,
   soft,
   mountainHeight,
   autoGenerate;
-const widthMap = 100.0;
-const heightMap = 100.0;
+let widthMap = 100.0;
+let heightMap = 100.0;
 let chunkSize = 3;
 let cameraY = 59.04;
 let cameraX = -74.23;
@@ -138,6 +138,9 @@ document.body.onscroll = moveCamera;
 moveCamera();
 
 function controlValues() {
+  chunkSize = document.getElementById("chunkSize").value;
+  widthMap = document.getElementById("width").value;
+  heightMap = document.getElementById("height").value;
   widthSegment = document.getElementById("widthSegment").value;
   heightSegment = document.getElementById("heightSegment").value;
   waterHeight = document.getElementById("waterHeight").value;
@@ -152,6 +155,9 @@ function controlValues() {
 controlValues();
 
 // Add event listeners to update the values when they change
+document.getElementById("chunkSize").addEventListener("change", controlValues);
+document.getElementById("width").addEventListener("change", controlValues);
+document.getElementById("height").addEventListener("change", controlValues);
 document
   .getElementById("widthSegment")
   .addEventListener("change", controlValues);
@@ -172,17 +178,17 @@ document
 
 addEventListener("mousemove", (event) => {
   document.getElementById("cameraX").innerText =
-    "Camera X: " + camera.position.x;
+    "Camera X: " + camera.position.x.toFixed(2);
   document.getElementById("cameraY").innerText =
-    "Camera Y: " + camera.position.y;
+    "Camera Y: " + camera.position.y.toFixed(2);
   document.getElementById("cameraZ").innerText =
-    "Camera Z: " + camera.position.z;
+    "Camera Z: " + camera.position.z.toFixed(2);
   document.getElementById("cameraRotationX").innerText =
-    "Camera Rotation X: " + camera.rotation.x;
+    "Camera Rotation X: " + camera.rotation.x.toFixed(2);
   document.getElementById("cameraRotationY").innerText =
-    "Camera Rotation Y: " + camera.rotation.y;
+    "Camera Rotation Y: " + camera.rotation.y.toFixed(2);
   document.getElementById("cameraRotationZ").innerText =
-    "Camera Rotation Z: " + camera.rotation.z;
+    "Camera Rotation Z: " + camera.rotation.z.toFixed(2);
   generate();
 });
 

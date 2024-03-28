@@ -73,8 +73,7 @@
   </head>
   <body>
     <div style="display: flex">
-      <canvas id="bg" style="width: 70%"></canvas>
-      <canvas id="minimap" style="width: 5%"></canvas>
+      <canvas id="bg" style="width: 75%"></canvas>
       <div style="width: 25%">
         <div class="container">
           Auto Generate:
@@ -84,18 +83,39 @@
           </label>
         </div>
         <br />
-        <label id="cameraX">0</label>
+        Width:(<span id="widthValue"></span>)
+        <input
+          id="width"
+          type="range"
+          min="0"
+          max="1000"
+          value="100"
+          step="1"
+          onchange="updateRangeValue('width')"
+        />
         <br />
-        <label id="cameraY">0</label>
-        <br />
-        <label id="cameraZ">0</label>
-        <br />
-        <label id="cameraRotationX">0</label>
-        <br />
-        <label id="cameraRotationY">0</label>
-        <br />
-        <label id="cameraRotationZ">0</label>
-        <br />
+        Height:(<span id="heightValue"></span>)
+        <input
+          id="height"
+          type="range"
+          min="0"
+          max="1000"
+          value="100"
+          step="1"
+          onchange="updateRangeValue('height')"
+        />
+        <br>
+        Chunk Size:(<span id="chunkSizeValue"></span>)
+        <input
+          id="chunkSize"
+          type="range"
+          min="0"
+          max="100"
+          value="3"
+          step="1"
+          onchange="updateRangeValue('chunkSize')"
+        />
+        <br>
         Width Segment:(<span id="widthSegmentValue"></span>)
         <input
           id="widthSegment"
@@ -162,10 +182,21 @@
           step="0.1"
           onchange="updateRangeValue('mountainHeight')"
         />
+        <label id="cameraX" style="margin: 0;">0</label>
+        <label id="cameraY" style="margin: 0;">0</label>
+        <label id="cameraZ" style="margin: 0;">0</label>
+        <label id="cameraRotationX" style="margin: 0;">0</label>
+        <label id="cameraRotationY" style="margin: 0;">0</label>
+        <label id="cameraRotationZ" style="margin: 0;">0</label>
+        
       </div>
+      
     </div>
 
     <script>
+      updateRangeValue('chunkSize')
+      updateRangeValue("width");
+      updateRangeValue("height");
       updateRangeValue("widthSegment");
       updateRangeValue("heightSegment");
       updateRangeValue("waterHeight");
