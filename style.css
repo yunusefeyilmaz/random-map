@@ -1,0 +1,64 @@
+.toggle-input {
+    display: none;
+  }
+
+  .toggle-label {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 23px;
+  }
+
+  .toggle-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 30px;
+  }
+
+  .toggle-button:before {
+    position: absolute;
+    content: "";
+    height: 15px;
+    width: 15px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+
+  .toggle-input:checked + .toggle-label .toggle-button {
+    background-color: #2196f3;
+  }
+
+  .toggle-input:checked + .toggle-label .toggle-button:before {
+    transform: translateX(15px);
+  }
+  body {
+  font-family: Arial, sans-serif; /* Use a nice font */
+  color: #333; /* Dark grey color for the text */
+  font-size: 1.2em; /* Make the text a bit larger */
+  font-weight: bold; /* Make the text bold */
+}
+
+.container {
+  font-size: 1.2em; /* Make the text a bit larger */
+  font-weight: bold; /* Make the text bold */
+}
+
+/* Style the labels */
+label {
+  display: block;
+  margin-top: 20px;
+  font-size: 1.1em;
+}
+
+/* Style the range inputs */
+input[type="range"] {
+  width: 100%;
+}

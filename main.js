@@ -8,14 +8,38 @@ let widthSegment,
   stop2,
   soft,
   mountainHeight,
-  autoGenerate;
-let widthMap = 100.0;
-let heightMap = 100.0;
-let chunkSize = 3;
+  autoGenerate,
+  widthMap=100,
+  heightMap=100,
+  chunkSize=3;
+
+// Camera
 let cameraY = 59.04;
 let cameraX = -74.23;
 let cameraZ = 72.13;
 
+
+
+// Controller
+import {Controller} from "./Controller.js";
+// Controllers
+const controllers = [
+  new Controller("autoGenerate", controlValues),
+  new Controller("chunkSize", controlValues),
+  new Controller("width", controlValues),
+  new Controller("height", controlValues),
+  new Controller("widthSegment", controlValues),
+  new Controller("heightSegment", controlValues),
+  new Controller("waterHeight", controlValues),
+  new Controller("stop2", controlValues),
+  new Controller("soft", controlValues),
+  new Controller("mountainHeight", controlValues),
+];
+// Add event listeners to the controllers
+controllers.forEach((control) => control.addEventListener());
+
+
+// Scene
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   120,
@@ -27,12 +51,14 @@ const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector("#bg"),
 });
 
+// Renderer
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(
   (window.innerWidth * 75) / 100,
   (window.innerHeight * 80) / 100
 );
 
+// Camera
 camera.position.setY(cameraY);
 camera.position.setZ(cameraZ);
 camera.position.setX(cameraX);
@@ -45,7 +71,6 @@ const pointLight = new THREE.PointLight(0xffffff);
 pointLight.position.set(10, 1000, 10);
 const ambientLight = new THREE.AmbientLight(0xffffff);
 scene.add(pointLight, ambientLight);
-
 const controls = new OrbitControls(camera, renderer.domElement);
 
 // Background
@@ -74,6 +99,7 @@ const water = () => {
   scene.add(wmesh);
   mesh = wmesh;
 };
+
 // Earth Terrain
 import { createTerrain } from "./EarthTerrain.js";
 let earthMesh = [];
@@ -106,6 +132,7 @@ const earth = () => {
     }
   }
 };
+
 const generate = () => {
   if (firstRender) {
     earth();
@@ -128,7 +155,7 @@ const generate = () => {
 };
 generate();
 // Scroll Animation
-function moveCamera() {
+const moveCamera = () =>{
   const t = document.body.getBoundingClientRect().top;
   camera.position.z = t * -0.2;
   camera.position.x = t * -0.0022;
@@ -137,7 +164,7 @@ function moveCamera() {
 document.body.onscroll = moveCamera;
 moveCamera();
 
-function controlValues() {
+function controlValues(){
   chunkSize = document.getElementById("chunkSize").value;
   widthMap = document.getElementById("width").value;
   heightMap = document.getElementById("height").value;
@@ -151,31 +178,11 @@ function controlValues() {
   firstRender = true;
   generate();
 }
+
 // Call controlValues once to initialize the values
 controlValues();
 
 // Add event listeners to update the values when they change
-document.getElementById("chunkSize").addEventListener("change", controlValues);
-document.getElementById("width").addEventListener("change", controlValues);
-document.getElementById("height").addEventListener("change", controlValues);
-document
-  .getElementById("widthSegment")
-  .addEventListener("change", controlValues);
-document
-  .getElementById("heightSegment")
-  .addEventListener("change", controlValues);
-document
-  .getElementById("waterHeight")
-  .addEventListener("change", controlValues);
-document.getElementById("stop2").addEventListener("change", controlValues);
-document.getElementById("soft").addEventListener("change", controlValues);
-document
-  .getElementById("mountainHeight")
-  .addEventListener("change", controlValues);
-document
-  .getElementById("autoGenerate")
-  .addEventListener("change", controlValues);
-
 addEventListener("mousemove", (event) => {
   document.getElementById("cameraX").innerText =
     "Camera X: " + camera.position.x.toFixed(2);
@@ -193,7 +200,7 @@ addEventListener("mousemove", (event) => {
 });
 
 // Animation Loop
-function animate(timestamp) {
+function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
