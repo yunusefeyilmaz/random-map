@@ -9,7 +9,7 @@ const scaledNoise = (nx, ny, scale) => {
     return Noise(nx * scale, ny * scale)/4 +0.5;
 }
 
-export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseScale,autoGenerate,camera,xDist,zDist)=> {
+export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseScale,autoGenerate,camera,xDist,zDist,terrainSharpness)=> {
   if(autoGenerate){
     rng = seedrandom(Math.random().toString()); // generate a random seed
     Noise = new createNoise2D(rng); 
@@ -45,16 +45,18 @@ export const createTerrain = ( widthMap, heightMap, start1, stop1, soft, noiseSc
     const x = camera.position.x+xDist + terrainGeometry.attributes.position.array[i];
     const y = camera.position.z-zDist - terrainGeometry.attributes.position.array[i + 1];
     // Map the x and y position to a value between 0 and 1
-    const nx = x/widthMap -0.5; 
-    const ny = y/heightMap -0.5;
+    const nx = x/widthMap ; 
+    const ny = y/heightMap;
     // Calculate the noise value
-    let e = scaledNoise(nx, ny, 1)+
-    0.5 * scaledNoise(nx, ny, 2)+
-    0.25 * scaledNoise(nx, ny,4)+
-    0.125 * scaledNoise(nx, ny, 8)+
-    0.06 * scaledNoise(nx, ny, 16)+
-    0.03 * scaledNoise(nx, ny, 32);
-    e = e / (1.0 + 0.5 + 0.25+0.125+0.06+0.03);
+    let choise=terrainSharpness;
+    let e = scaledNoise(nx, ny, 1*choise)+
+    0.5 * scaledNoise(nx, ny, 2*choise)+
+    0.25 * scaledNoise(nx, ny,4*choise)+
+    0.125 * scaledNoise(nx, ny, 8*choise)+
+    0.06 * scaledNoise(nx, ny, 16*choise)+
+    0.03 * scaledNoise(nx, ny, 32*choise)+
+    0.015 * scaledNoise(nx, ny, 64*choise);
+    e = e / (1.0 + 0.5);
     e = Math.round(e * soft) / soft;
     let m = scaledNoise(nx, ny, 1)+
     0.5 * scaledNoise(nx, ny, 2)+

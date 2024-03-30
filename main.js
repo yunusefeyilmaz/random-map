@@ -5,6 +5,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 let widthSegment,
   heightSegment,
   waterHeight,
+  terrainSharpness,
   stop2,
   soft,
   mountainHeight,
@@ -24,6 +25,7 @@ let cameraZ = 72.13;
 import {Controller} from "./Controller.js";
 // Controllers
 const controllers = [
+  new Controller("terrainSharpness", controlValues),
   new Controller("autoGenerate", controlValues),
   new Controller("chunkSize", controlValues),
   new Controller("width", controlValues),
@@ -124,7 +126,8 @@ const earth = () => {
           autoGenerate,
           camera,
           xDist,
-          zDist
+          zDist,
+          terrainSharpness
         );
         scene.add(emesh);
         earthMesh.push(emesh);
@@ -165,6 +168,7 @@ document.body.onscroll = moveCamera;
 moveCamera();
 
 function controlValues(){
+  terrainSharpness = document.getElementById("terrainSharpness").value;
   chunkSize = document.getElementById("chunkSize").value;
   widthMap = document.getElementById("width").value;
   heightMap = document.getElementById("height").value;
