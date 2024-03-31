@@ -115,9 +115,12 @@ const earth = () => {
   for (let k = -1; k <= 1; k += 2) {
     for (let j = -1; j <= 1; j += 2) {
       for (let i = 0; i < chunkSize * chunkSize; i++) {
+
+        // Calculate the distance between the chunks
         let xDist = (i % chunkSize) * widthMap*k;
         let zDist = Math.floor(i / chunkSize) * heightMap*j;
 
+        // Create the terrain mesh
         let earthT=[];
         earthT= createTerrain(
           widthMap,
@@ -132,10 +135,11 @@ const earth = () => {
           zDist,
           terrainSharpness
         );
+        // Add the terrain to the scene
         scene.add(earthT[0]);
         // Add the tree to the scene
         earthT[1].forEach((tree) => scene.add(tree));
-        
+        earthT[2].forEach((house) => scene.add(house));
       }
     }
   }

@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { createNoise2D } from "simplex-noise";
 import seedrandom from "seedrandom";
 import { createTree } from "./TreeTerrain";
+import { createHouse } from "./House";
 
 let rng = seedrandom(Math.random().toString()); // generate a random seed
 let Noise = new createNoise2D(rng); // create a new 2D noise function
@@ -48,6 +49,8 @@ export const createTerrain = (
   );
   // Create the tree mesh
   let treeMesh = [];
+  // Create the houses mesh
+  let houseMesh = [];
   // Loop through the terrain and set the height
   for (
     let i = 0;
@@ -90,10 +93,32 @@ export const createTerrain = (
       terrainGeometry.attributes.position.array[i + 2] = e * mountainHeight;
     }
     // Create the trees
-    if (e * mountainHeight < 70 && Math.random() < 0.03 && e * mountainHeight >55){
-      let [tree,leaves]= createTree(x, e * mountainHeight - mountainHeight / 2.7, y);
-      treeMesh.push(tree,leaves);
+    if (
+      e * mountainHeight < (70 * mountainHeight) / 100 &&
+      Math.random() < 0.03 &&
+      e * mountainHeight > (55 * mountainHeight) / 100
+    ) {
+      let [tree, leaves] = createTree(
+        x,
+        e * mountainHeight - mountainHeight / 2 + mountainHeight / 8,
+        y
+      );
+      treeMesh.push(tree, leaves);
     }
+    //Create the houses
+    if (
+      e * mountainHeight < (50 * mountainHeight) / 100 &&
+      Math.random() < 0.05 &&
+      e * mountainHeight > (10 * mountainHeight) / 100
+    ) {
+      let [house, roof] = createHouse(
+        x,
+        e * mountainHeight - mountainHeight / 2 + mountainHeight / 8,
+        y
+      );
+      houseMesh.push(house, roof);
+    }
+
     // Calculate the color based on the height
     const biomeColor = biome(e, m);
     colors[i] = biomeColor.b;
@@ -113,7 +138,7 @@ export const createTerrain = (
   terrain.position.x = camera.position.x + xDist;
   terrain.position.z = camera.position.z - zDist;
   // Add the terrain to the scene
-  return [terrain, treeMesh];
+  return [terrain, treeMesh, houseMesh];
 };
 
 // Biome Colors
