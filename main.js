@@ -40,6 +40,11 @@ const controllers = [
 // Add event listeners to the controllers
 controllers.forEach((control) => control.addEventListener());
 
+// Remove everything from the scene
+function removeAll() {
+  const objectsToRemove = scene.children.filter(child => !(child instanceof THREE.Color));
+  scene.remove(...objectsToRemove);
+}
 
 // Scene
 const scene = new THREE.Scene();
@@ -69,24 +74,24 @@ camera.rotateY(-0.6);
 camera.rotateZ(-0.52);
 
 // Lights
-const pointLight = new THREE.PointLight(0xffffff);
-pointLight.position.set(10, 1000, 10);
-const ambientLight = new THREE.AmbientLight(0xffffff);
-scene.add(pointLight, ambientLight);
 const controls = new OrbitControls(camera, renderer.domElement);
+function addLight() {
+  const pointLight = new THREE.PointLight(0xffffff);
+  pointLight.position.set(10, 1000, 10);
+  const ambientLight = new THREE.AmbientLight(0xffffff);
+  scene.add(pointLight, ambientLight);
+  
+  // Background
+  const spaceTexture = new THREE.TextureLoader().load("space.jpg");
+  scene.background = spaceTexture;
+}
 
-// Background
-const spaceTexture = new THREE.TextureLoader().load("space.jpg");
-scene.background = spaceTexture;
+
 
 // Water Terrain
 import { createWater } from "./WaterTerrain.js";
-let mesh;
 const water = () => {
   // Remove the previous mesh
-  if (mesh) {
-    scene.remove(mesh);
-  }
   const xDist = 0;
   const zDist = 0;
   // Create the water mesh
@@ -99,24 +104,22 @@ const water = () => {
     zDist
   );
   scene.add(wmesh);
-  mesh = wmesh;
 };
 
 // Earth Terrain
 import { createTerrain } from "./EarthTerrain.js";
-let earthMesh = [];
 let currentPos = { x: cameraX, z: cameraZ };
 let firstRender = true;
 const earth = () => {
-  // Remove the previous mesh
-  earthMesh.forEach((mesh) => scene.remove(mesh));
   // Create the earth mesh
   for (let k = -1; k <= 1; k += 2) {
     for (let j = -1; j <= 1; j += 2) {
       for (let i = 0; i < chunkSize * chunkSize; i++) {
         let xDist = (i % chunkSize) * widthMap*k;
         let zDist = Math.floor(i / chunkSize) * heightMap*j;
-        const emesh = createTerrain(
+
+        let earthT=[];
+        earthT= createTerrain(
           widthMap,
           heightMap,
           widthSegment,
@@ -129,8 +132,10 @@ const earth = () => {
           zDist,
           terrainSharpness
         );
-        scene.add(emesh);
-        earthMesh.push(emesh);
+        scene.add(earthT[0]);
+        // Add the tree to the scene
+        earthT[1].forEach((tree) => scene.add(tree));
+        
       }
     }
   }
@@ -138,6 +143,8 @@ const earth = () => {
 
 const generate = () => {
   if (firstRender) {
+    removeAll();
+    addLight();
     earth();
     water();
     firstRender = false;
@@ -147,13 +154,19 @@ const generate = () => {
     camera.position.x - currentPos.x <= -widthMap ||
     camera.position.z - currentPos.z <= -heightMap
   ) {
+    removeAll();
+    addLight();
     earth();
     water();
     currentPos.x = camera.position.x;
     currentPos.z = camera.position.z;
   } else if (autoGenerate) {
-    earth();
-    water();
+    setTimeout(() => {
+      removeAll();
+      addLight();
+      earth();
+      water();
+    }, 2000);
   }
 };
 generate();
@@ -211,3 +224,5 @@ function animate() {
 }
 
 animate();
+
+
