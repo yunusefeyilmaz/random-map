@@ -10,19 +10,17 @@ let widthSegment,
   soft,
   mountainHeight,
   autoGenerate,
-  widthMap=100,
-  heightMap=100,
-  chunkSize=3;
+  widthMap = 100,
+  heightMap = 100,
+  chunkSize = 3;
 
 // Camera
 let cameraY = 59.04;
 let cameraX = -74.23;
 let cameraZ = 72.13;
 
-
-
 // Controller
-import {Controller} from "./Controller.js";
+import { Controller } from "./Controller.js";
 // Controllers
 const controllers = [
   new Controller("terrainSharpness", controlValues),
@@ -42,7 +40,9 @@ controllers.forEach((control) => control.addEventListener());
 
 // Remove everything from the scene
 function removeAll() {
-  const objectsToRemove = scene.children.filter(child => !(child instanceof THREE.Color));
+  const objectsToRemove = scene.children.filter(
+    (child) => !(child instanceof THREE.Color)
+  );
   scene.remove(...objectsToRemove);
 }
 
@@ -61,8 +61,8 @@ const renderer = new THREE.WebGLRenderer({
 // Renderer
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(
-  (window.innerWidth * 75) / 100,
-  (window.innerHeight * 80) / 100
+  window.innerWidth ,
+  window.innerHeight
 );
 
 // Camera
@@ -80,13 +80,11 @@ function addLight() {
   pointLight.position.set(10, 1000, 10);
   const ambientLight = new THREE.AmbientLight(0xffffff);
   scene.add(pointLight, ambientLight);
-  
+
   // Background
   const spaceTexture = new THREE.TextureLoader().load("space.jpg");
   scene.background = spaceTexture;
 }
-
-
 
 // Water Terrain
 import { createWater } from "./WaterTerrain.js";
@@ -96,8 +94,8 @@ const water = () => {
   const zDist = 0;
   // Create the water mesh
   const wmesh = createWater(
-    widthMap * chunkSize*chunkSize/1.5,
-    heightMap * chunkSize*chunkSize/1.5,
+    (widthMap * chunkSize * chunkSize) / 1.5,
+    (heightMap * chunkSize * chunkSize) / 1.5,
     waterHeight,
     camera,
     xDist,
@@ -115,14 +113,13 @@ const earth = () => {
   for (let k = -1; k <= 1; k += 2) {
     for (let j = -1; j <= 1; j += 2) {
       for (let i = 0; i < chunkSize * chunkSize; i++) {
-
         // Calculate the distance between the chunks
-        let xDist = (i % chunkSize) * widthMap*k;
-        let zDist = Math.floor(i / chunkSize) * heightMap*j;
+        let xDist = (i % chunkSize) * widthMap * k;
+        let zDist = Math.floor(i / chunkSize) * heightMap * j;
 
         // Create the terrain mesh
-        let earthT=[];
-        earthT= createTerrain(
+        let earthT = [];
+        earthT = createTerrain(
           widthMap,
           heightMap,
           widthSegment,
@@ -175,16 +172,16 @@ const generate = () => {
 };
 generate();
 // Scroll Animation
-const moveCamera = () =>{
+const moveCamera = () => {
   const t = document.body.getBoundingClientRect().top;
   camera.position.z = t * -0.2;
   camera.position.x = t * -0.0022;
   camera.rotation.y = t * -0.0022;
-}
+};
 document.body.onscroll = moveCamera;
 moveCamera();
 
-function controlValues(){
+function controlValues() {
   terrainSharpness = document.getElementById("terrainSharpness").value;
   chunkSize = document.getElementById("chunkSize").value;
   widthMap = document.getElementById("width").value;
@@ -206,17 +203,11 @@ controlValues();
 // Add event listeners to update the values when they change
 addEventListener("mousemove", (event) => {
   document.getElementById("cameraX").innerText =
-    "Camera X: " + camera.position.x.toFixed(2);
+    "X: " + camera.position.x.toFixed(2);
   document.getElementById("cameraY").innerText =
-    "Camera Y: " + camera.position.y.toFixed(2);
+    "Y: " + camera.position.y.toFixed(2);
   document.getElementById("cameraZ").innerText =
-    "Camera Z: " + camera.position.z.toFixed(2);
-  document.getElementById("cameraRotationX").innerText =
-    "Camera Rotation X: " + camera.rotation.x.toFixed(2);
-  document.getElementById("cameraRotationY").innerText =
-    "Camera Rotation Y: " + camera.rotation.y.toFixed(2);
-  document.getElementById("cameraRotationZ").innerText =
-    "Camera Rotation Z: " + camera.rotation.z.toFixed(2);
+    "Z: " + camera.position.z.toFixed(2);
   generate();
 });
 
@@ -228,5 +219,3 @@ function animate() {
 }
 
 animate();
-
-
