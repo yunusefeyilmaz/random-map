@@ -1,4 +1,4 @@
-# Three.js Map Generation Project
+# Three.js Map Generation
 <br>
   <p align="center">
   <img src="https://github.com/yunusefeyilmaz/three-map-generation/assets/89478740/acafcb47-3b06-470d-918c-375b880e84a7" alt="Project Logo" width="100" height="100">
