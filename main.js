@@ -48,7 +48,7 @@ function removeAll() {
 
 // Scene
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
+let camera = new THREE.PerspectiveCamera(
   120,
   window.innerWidth / window.innerHeight,
   0.4,
@@ -85,69 +85,42 @@ function addLight() {
   const spaceTexture = new THREE.TextureLoader().load("space.jpg");
   scene.background = spaceTexture;
 }
-
-// Water Terrain
-import { createWater } from "./WaterTerrain.js";
-const water = () => {
-  // Remove the previous mesh
-  const xDist = 0;
-  const zDist = 0;
-  // Create the water mesh
-  const wmesh = createWater(
-    (widthMap * chunkSize * chunkSize) / 1.5,
-    (heightMap * chunkSize * chunkSize) / 1.5,
-    waterHeight,
-    camera,
-    xDist,
-    zDist
-  );
-  scene.add(wmesh);
-};
-
-// Earth Terrain
-import { createTerrain } from "./EarthTerrain.js";
 let currentPos = { x: cameraX, z: cameraZ };
 let firstRender = true;
-const earth = () => {
-  // Create the earth mesh
-  for (let k = -1; k <= 1; k += 2) {
-    for (let j = -1; j <= 1; j += 2) {
-      for (let i = 0; i < chunkSize * chunkSize; i++) {
-        // Calculate the distance between the chunks
-        let xDist = (i % chunkSize) * widthMap * k;
-        let zDist = Math.floor(i / chunkSize) * heightMap * j;
-
-        // Create the terrain mesh
-        let earthT = [];
-        earthT = createTerrain(
-          widthMap,
-          heightMap,
-          widthSegment,
-          heightSegment,
-          soft,
-          mountainHeight,
-          autoGenerate,
-          camera,
-          xDist,
-          zDist,
-          terrainSharpness
-        );
-        // Add the terrain to the scene
-        scene.add(earthT[0]);
-        // Add the tree to the scene
-        earthT[1].forEach((tree) => scene.add(tree));
-        earthT[2].forEach((house) => scene.add(house));
-      }
-    }
-  }
+// Generate the terrain
+import {generateTerrain} from "./TerrainController.js";
+const generateAllTerrain = () => {
+  let [waterT, earthT,treeT,houseT,cloudT]=generateTerrain(
+    widthSegment,
+    heightSegment,
+    waterHeight,
+    terrainSharpness,
+    stop2,
+    soft,
+    mountainHeight,
+    autoGenerate,
+    widthMap,
+    heightMap,
+    chunkSize,
+    camera);
+  scene.add(waterT);
+  earthT.forEach((e) => scene.add(e));
+  treeT.forEach((t) => {
+    t.forEach((tree) => scene.add(tree));
+  });
+  houseT.forEach((h) => {
+    h.forEach((house) => {if(house!=null){scene.add(house)}});
+  });
+  cloudT.forEach((c) => {
+    scene.add(c); 
+  });
 };
 
 const generate = () => {
   if (firstRender) {
     removeAll();
     addLight();
-    earth();
-    water();
+    generateAllTerrain();
     firstRender = false;
   } else if (
     camera.position.x - currentPos.x >= widthMap ||
@@ -157,16 +130,14 @@ const generate = () => {
   ) {
     removeAll();
     addLight();
-    earth();
-    water();
+    generateAllTerrain();
     currentPos.x = camera.position.x;
     currentPos.z = camera.position.z;
   } else if (autoGenerate) {
     setTimeout(() => {
       removeAll();
       addLight();
-      earth();
-      water();
+      generateAllTerrain();
     }, 2000);
   }
 };
