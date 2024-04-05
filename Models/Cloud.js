@@ -18,7 +18,6 @@ export const createCloud = (x, y, z) => {
     cloud.add(sphere);
   }
   cloud.scale.set(0.5, 0.5, 0.5);
-
   cloud.position.set(x, y, z);
   return [cloud];
 };

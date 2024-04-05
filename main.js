@@ -1,12 +1,14 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-
+import { generateTerrain } from "/Controllers/TerrainController.js";
+import { Controller } from "./Controllers/UIController.js";
+import { CloudController } from "./Controllers/CloudController.js";
+import { WaterController } from "./Controllers/WaterController.js";
 // Setups
 let widthSegment,
   heightSegment,
   waterHeight,
   terrainSharpness,
-  stop2,
   soft,
   mountainHeight,
   autoGenerate,
@@ -19,8 +21,6 @@ let cameraY = 59.04;
 let cameraX = -74.23;
 let cameraZ = 72.13;
 
-// Controller
-import { Controller } from "./Controller.js";
 // Controllers
 const controllers = [
   new Controller("terrainSharpness", controlValues),
@@ -31,7 +31,6 @@ const controllers = [
   new Controller("widthSegment", controlValues),
   new Controller("heightSegment", controlValues),
   new Controller("waterHeight", controlValues),
-  new Controller("stop2", controlValues),
   new Controller("soft", controlValues),
   new Controller("mountainHeight", controlValues),
 ];
@@ -60,10 +59,7 @@ const renderer = new THREE.WebGLRenderer({
 
 // Renderer
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(
-  window.innerWidth ,
-  window.innerHeight
-);
+renderer.setSize(window.innerWidth, window.innerHeight);
 
 // Camera
 camera.position.setY(cameraY);
@@ -88,34 +84,54 @@ function addLight() {
 let currentPos = { x: cameraX, z: cameraZ };
 let firstRender = true;
 // Generate the terrain
-import {generateTerrain} from "./TerrainController.js";
+
 const generateAllTerrain = () => {
-  let [waterT, earthT,treeT,houseT,cloudT]=generateTerrain(
+  let [earthT, treeT, houseT] = generateTerrain(
     widthSegment,
     heightSegment,
-    waterHeight,
     terrainSharpness,
-    stop2,
     soft,
     mountainHeight,
     autoGenerate,
     widthMap,
     heightMap,
     chunkSize,
-    camera);
-  scene.add(waterT);
+    camera
+  );
+  // Add the terrain to the scene
   earthT.forEach((e) => scene.add(e));
-  treeT.forEach((t) => {
-    t.forEach((tree) => scene.add(tree));
-  });
-  houseT.forEach((h) => {
-    h.forEach((house) => {if(house!=null){scene.add(house)}});
-  });
-  cloudT.forEach((c) => {
-    scene.add(c); 
-  });
+  addObjToScene(treeT);
+  addObjToScene(houseT);
+  // Add the water to the scene
+  let [waterT] = WaterController(
+    widthMap,
+    heightMap,
+    chunkSize,
+    camera,
+    waterHeight
+  );
+  scene.add(waterT);
+  // Add the clouds to the scene
+  let cloudT = CloudController(
+    widthMap,
+    heightMap,
+    mountainHeight,
+    chunkSize,
+    camera
+  );
+  addObjToScene(cloudT);
 };
 
+const addObjToScene = (obj) => {
+  obj.forEach((a) => {
+    a.forEach((b) => {
+      if (b != null) {
+        scene.add(b);
+      }
+    });
+  });
+};
+// Generate the terrain
 const generate = () => {
   if (firstRender) {
     removeAll();
@@ -142,6 +158,7 @@ const generate = () => {
   }
 };
 generate();
+
 // Scroll Animation
 const moveCamera = () => {
   const t = document.body.getBoundingClientRect().top;
@@ -160,7 +177,6 @@ function controlValues() {
   widthSegment = document.getElementById("widthSegment").value;
   heightSegment = document.getElementById("heightSegment").value;
   waterHeight = document.getElementById("waterHeight").value;
-  stop2 = document.getElementById("stop2").value;
   soft = document.getElementById("soft").value;
   mountainHeight = document.getElementById("mountainHeight").value;
   autoGenerate = document.getElementById("autoGenerate").checked;

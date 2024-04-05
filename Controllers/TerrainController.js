@@ -1,12 +1,10 @@
-import { createWater } from "./WaterTerrain.js";
-import { createTerrain } from "./EarthTerrain.js";
-import { createCloud } from "./Cloud.js";
+// Purpose: Generate the terrain mesh and the tree and house meshes
+import { createTerrain } from "../Models/Earth.js";
+
 export const generateTerrain = (
   widthSegment,
   heightSegment,
-  waterHeight,
   terrainSharpness,
-  stop2,
   soft,
   mountainHeight,
   autoGenerate,
@@ -15,17 +13,6 @@ export const generateTerrain = (
   chunkSize = 3,
   camera
 ) => {
-    const xDist = 0;
-    const zDist = 0;
-    // Create the water mesh
-    const waterMesh = createWater(
-      (widthMap * chunkSize * chunkSize) / 1.5,
-      (heightMap * chunkSize * chunkSize) / 1.5,
-      waterHeight,
-      camera,
-      xDist,
-      zDist
-    );
     let earthT = [];
     let treeT = [];
     let houseT = [];
@@ -57,22 +44,6 @@ export const generateTerrain = (
           }
         }
       }
-    // Create the cloud mesh
-    let cloudT = [];
-    for(let i=0;i<10;i++){
-      if(Math.random()>0.3){
-        let xA = camera.position.x - widthMap*(chunkSize-0.5);
-        let zA= camera.position.z - heightMap*(chunkSize-0.5);
-        let xB = camera.position.x + widthMap*(chunkSize-0.5);
-        let zB = camera.position.z + heightMap*(chunkSize-0.5);
-        let start = [xA,zA];
-        let end = [xB,zB];
-        let xAreaPos = Math.random() * (end[0] - start[0]) + start[0];
-        let zAreaPos = Math.random() * (end[1] - start[1]) + start[1];
-        let [cloud] = createCloud(xAreaPos, mountainHeight/4,zAreaPos);
-        cloudT.push(cloud);
-      }
-    }
     // Add the terrain to the scene
-    return [waterMesh, earthT, treeT, houseT, cloudT];
+    return [earthT, treeT, houseT];
 };

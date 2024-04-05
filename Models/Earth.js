@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { createNoise2D } from "simplex-noise";
 import seedrandom from "seedrandom";
-import { createTree } from "./TreeTerrain";
+import { createTree } from "./Tree";
 import { createHouse } from "./House";
 
 let rng = seedrandom(Math.random().toString()); // generate a random seed
