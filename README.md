@@ -9,6 +9,7 @@
 <br>
 
 This project utilizes Three.js to generate maps dynamically. It provides a flexible and customizable way to create various types of maps for different applications.
+<p>You can try here: https://yunusefeyilmaz.github.io/three-map-generation/</p>
 
 ## Usage
 
@@ -46,3 +47,5 @@ npm run dev
 ## Acknowledgements
 
 - Special thanks to the contributors of Three.js for providing such a powerful library.
+
+![image](https://github.com/yunusefeyilmaz/three-map-generation/assets/89478740/d4e8a4d7-23b2-43a2-afb0-5378e8941253)
