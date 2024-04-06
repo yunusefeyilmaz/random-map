@@ -4,11 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Random-Map</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./public/css/style.css" />
   </head>
   <body>
     <script type="module" src="./main.js"></script>
-    <div >
+    <script  type="module" src="./public/js/main.js"></script>
+    <div>
       <canvas id="bg"></canvas>
       <div class="menubar">
         <div class="container">
@@ -17,7 +18,7 @@
           <label for="autoGenerate" class="toggle-label">
             <span class="toggle-button"></span>
           </label>
-        </div >
+        </div>
         <div class="slidecontainer">
           Width:(<span id="widthValue"></span>)
           <input
@@ -28,7 +29,6 @@
             max="1000"
             value="100"
             step="1"
-            onchange="updateRangeValue('width')"
           />
         </div>
 
@@ -42,7 +42,6 @@
             max="1000"
             value="100"
             step="1"
-            onchange="updateRangeValue('height')"
           />
         </div>
         <div class="slidecontainer">
@@ -55,7 +54,6 @@
             max="100"
             value="3"
             step="1"
-            onchange="updateRangeValue('chunkSize')"
           />
         </div>
         <div class="slidecontainer">
@@ -68,7 +66,6 @@
             max="1000"
             value="45"
             step="1"
-            onchange="updateRangeValue('widthSegment')"
           />
         </div>
         <div class="slidecontainer">
@@ -81,7 +78,6 @@
             max="1000"
             value="45"
             step="1"
-            onchange="updateRangeValue('heightSegment')"
           />
         </div>
         <div class="slidecontainer">
@@ -94,7 +90,6 @@
             max="100"
             value="10"
             step="0.1"
-            onchange="updateRangeValue('waterHeight')"
           />
         </div>
         <div class="slidecontainer">
@@ -107,7 +102,6 @@
             max="400"
             value="120"
             step="0.01"
-            onchange="updateRangeValue('soft')"
           />
         </div>
         <div class="slidecontainer">
@@ -120,7 +114,6 @@
             max="500"
             value="100"
             step="0.1"
-            onchange="updateRangeValue('mountainHeight')"
           />
         </div>
         <div class="slidecontainer">
@@ -133,31 +126,15 @@
             max="10"
             value="0.4"
             step="0.01"
-            onchange="updateRangeValue('terrainSharpness')"
           />
         </div>
-        <label id="cameraX" style="margin: 0">0</label>
-        <label id="cameraY" style="margin: 0">0</label>
-        <label id="cameraZ" style="margin: 0">0</label>
+        <div class="container">
+          <label id="cameraX" style="margin: 0">0</label>
+          <label id="cameraY" style="margin: 0">0</label>
+          <label id="cameraZ" style="margin: 0">0</label>
+        </div>
       </div>
     </div>
-
-    <script>
-      updateRangeValue("terrainSharpness");
-      updateRangeValue("chunkSize");
-      updateRangeValue("width");
-      updateRangeValue("height");
-      updateRangeValue("widthSegment");
-      updateRangeValue("heightSegment");
-      updateRangeValue("waterHeight");
-      updateRangeValue("soft");
-      updateRangeValue("mountainHeight");
-      function updateRangeValue(inputId) {
-        const input = document.getElementById(inputId);
-        const valueElement = document.getElementById(inputId + "Value");
-        valueElement.textContent = input.value;
-      }
-    </script>
     <br />
   </body>
 </html>
