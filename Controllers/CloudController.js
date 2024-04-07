@@ -7,21 +7,23 @@ export const CloudController = (
   chunkSize,
   { position }
 ) => {
-  // Create the cloud mesh
-  let cloudT = [];
-  for (let i = 0; i < 10; i++) {
+  const numClouds = document.getElementById("cloudCount").value;
+  const xA = position.x - widthMap * (chunkSize - 0.5);
+  const zA = position.z - heightMap * (chunkSize - 0.5);
+  const xB = position.x + widthMap * (chunkSize - 0.5);
+  const zB = position.z + heightMap * (chunkSize - 0.5);
+  const start = [xA, zA];
+  const end = [xB, zB];
+  const cloudT = [];
+
+  for (let i = 0; i < numClouds; i++) {
     if (Math.random() > 0.3) {
-      let xA = position.x - widthMap * (chunkSize - 0.5);
-      let zA = position.z - heightMap * (chunkSize - 0.5);
-      let xB = position.x + widthMap * (chunkSize - 0.5);
-      let zB = position.z + heightMap * (chunkSize - 0.5);
-      let start = [xA, zA];
-      let end = [xB, zB];
-      let xAreaPos = Math.random() * (end[0] - start[0]) + start[0];
-      let zAreaPos = Math.random() * (end[1] - start[1]) + start[1];
-      let [cloud] = createCloud(xAreaPos, mountainHeight / 4, zAreaPos);
+      const xAreaPos = Math.random() * (end[0] - start[0]) + start[0];
+      const zAreaPos = Math.random() * (end[1] - start[1]) + start[1];
+      const cloud = createCloud(xAreaPos, mountainHeight / 4, zAreaPos);
       cloudT.push(cloud);
     }
   }
-  return [cloudT];
+
+  return cloudT;
 };

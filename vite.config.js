@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   // Projenizin kök dizini
-  root: './',
+  root: './src',
   base: "/three-map-generation/",
   // Geliştirme sunucusu ayarları
   server: {

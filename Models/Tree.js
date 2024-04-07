@@ -12,7 +12,7 @@ export const createTree = (x, y, z) => {
   var leavesMaterial = new THREE.MeshBasicMaterial({ color: 0x228b22 });
   var leavesGeometry = new THREE.ConeGeometry(1, 3, 8);
   var leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
-  leaves.position.set(x, y + 1.5, z);
+  leaves.position.set(x, y + 2, z);
   tree.position.set(x, y, z);
 
   return [tree, leaves];

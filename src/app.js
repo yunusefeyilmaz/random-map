@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { generateTerrain } from "/Controllers/TerrainController.js";
-import { Controller } from "./Controllers/UIController.js";
-import { CloudController } from "./Controllers/CloudController.js";
-import { WaterController } from "./Controllers/WaterController.js";
+import { generateTerrain } from "../Controllers/TerrainController.js";
+import { Controller } from "../Controllers/UIController.js";
+import { CloudController } from "../Controllers/CloudController.js";
+import { WaterController } from "../Controllers/WaterController.js";
 // Setups
 let widthSegment,
   heightSegment,
@@ -12,14 +12,9 @@ let widthSegment,
   soft,
   mountainHeight,
   autoGenerate,
-  widthMap = 100,
-  heightMap = 100,
-  chunkSize = 3;
-
-// Camera
-let cameraY = 59.04;
-let cameraX = -74.23;
-let cameraZ = 72.13;
+  widthMap,
+  heightMap,
+  chunkSize;
 
 // Controllers
 const controllers = [
@@ -33,6 +28,7 @@ const controllers = [
   new Controller("waterHeight", controlValues),
   new Controller("soft", controlValues),
   new Controller("mountainHeight", controlValues),
+  new Controller("cloudCount", controlValues)
 ];
 // Add event listeners to the controllers
 controllers.forEach((control) => control.addEventListener());
@@ -53,6 +49,8 @@ let camera = new THREE.PerspectiveCamera(
   0.4,
   10000
 );
+camera.position.setY(100);
+
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector("#bg"),
 });
@@ -62,12 +60,6 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 // Camera
-camera.position.setY(cameraY);
-camera.position.setZ(cameraZ);
-camera.position.setX(cameraX);
-camera.rotateX(-0.79);
-camera.rotateY(-0.6);
-camera.rotateZ(-0.52);
 
 // Lights
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -78,10 +70,10 @@ function addLight() {
   scene.add(pointLight, ambientLight);
 
   // Background
-  const spaceTexture = new THREE.TextureLoader().load("space.jpg");
+  const spaceTexture = new THREE.TextureLoader().load("./img/space.jpg");
   scene.background = spaceTexture;
 }
-let currentPos = { x: cameraX, z: cameraZ };
+let currentPos = { x: 0, z: 0 };
 let firstRender = true;
 // Generate the terrain
 
@@ -133,28 +125,18 @@ const addObjToScene = (obj) => {
 };
 // Generate the terrain
 const generate = () => {
-  if (firstRender) {
-    removeAll();
-    addLight();
-    generateAllTerrain();
-    firstRender = false;
-  } else if (
-    camera.position.x - currentPos.x >= widthMap ||
-    camera.position.z - currentPos.z >= heightMap ||
-    camera.position.x - currentPos.x <= -widthMap ||
-    camera.position.z - currentPos.z <= -heightMap
+  if (
+    firstRender ||
+    Math.abs(camera.position.x - currentPos.x) >= widthMap ||
+    Math.abs(camera.position.z - currentPos.z) >= heightMap ||
+    autoGenerate
   ) {
     removeAll();
     addLight();
     generateAllTerrain();
     currentPos.x = camera.position.x;
     currentPos.z = camera.position.z;
-  } else if (autoGenerate) {
-    setTimeout(() => {
-      removeAll();
-      addLight();
-      generateAllTerrain();
-    }, 2000);
+    firstRender = false;
   }
 };
 generate();
