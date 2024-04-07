@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random-Map</title>
+    
+    <script type="module" crossorigin src="/three-map-generation/assets/index.625f92a9.js"></script>
+    <link rel="stylesheet" href="/three-map-generation/assets/index.48a1aac0.css">
+  </head>
+  <body>
+    
+    
+    <div>
+      <canvas id="bg"></canvas>
+      <div class="menubar">
+        <div class="container">
+          Auto Generate:
+          <input type="checkbox" id="autoGenerate" class="toggle-input" />
+          <label for="autoGenerate" class="toggle-label">
+            <span class="toggle-button"></span>
+          </label>
+        </div>
+        <div class="slidecontainer">
+          Width:(<span id="widthValue"></span>)
+          <input
+            class="slider"
+            id="width"
+            type="range"
+            min="0"
+            max="1000"
+            value="100"
+            step="1"
+          />
+        </div>
+
+        <div class="slidecontainer">
+          Height:(<span id="heightValue"></span>)
+          <input
+            class="slider"
+            id="height"
+            type="range"
+            min="0"
+            max="1000"
+            value="100"
+            step="1"
+          />
+        </div>
+        <div class="slidecontainer">
+          Chunk Size:(<span id="chunkSizeValue"></span>)
+          <input
+            class="slider"
+            id="chunkSize"
+            type="range"
+            min="0"
+            max="100"
+            value="3"
+            step="1"
+          />
+        </div>
+        <div class="slidecontainer">
+          Width Segment:(<span id="widthSegmentValue"></span>)
+          <input
+            class="slider"
+            id="widthSegment"
+            type="range"
+            min="0"
+            max="1000"
+            value="45"
+            step="1"
+          />
+        </div>
+        <div class="slidecontainer">
+          Height Segment:(<span id="heightSegmentValue"></span>)
+          <input
+            class="slider"
+            id="heightSegment"
+            type="range"
+            min="0"
+            max="1000"
+            value="45"
+            step="1"
+          />
+        </div>
+        <div class="slidecontainer">
+          Water Height:(<span id="waterHeightValue"></span>)
+          <input
+            class="slider"
+            id="waterHeight"
+            type="range"
+            min="-100"
+            max="100"
+            value="10"
+            step="0.1"
+          />
+        </div>
+        <div class="slidecontainer">
+          Softness:(<span id="softValue"></span>)
+          <input
+            class="slider"
+            id="soft"
+            type="range"
+            min="0"
+            max="400"
+            value="120"
+            step="0.01"
+          />
+        </div>
+        <div class="slidecontainer">
+          Mountain Height:(<span id="mountainHeightValue"></span>)
+          <input
+            class="slider"
+            id="mountainHeight"
+            type="range"
+            min="0"
+            max="500"
+            value="100"
+            step="0.1"
+          />
+        </div>
+        <div class="slidecontainer">
+          Terrain Sharpness:(<span id="terrainSharpnessValue"></span>)
+          <input
+            class="slider"
+            id="terrainSharpness"
+            type="range"
+            min="0"
+            max="10"
+            value="0.4"
+            step="0.01"
+          />
+        </div>
+        <div class="container">
+          <label id="cameraX" style="margin: 0">0</label>
+          <label id="cameraY" style="margin: 0">0</label>
+          <label id="cameraZ" style="margin: 0">0</label>
+        </div>
+      </div>
+    </div>
+    <br />
+  </body>
+</html>
